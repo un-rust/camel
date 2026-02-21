@@ -82,6 +82,24 @@ pub fn split_by_case(s: &str, separators: Option<&[char]>) -> Vec<String> {
     parts
 }
 
+pub fn upper_first(s: &str) -> String {
+    let mut chars = s.chars();
+    if let Some(c) = chars.next() {
+        c.to_uppercase().collect::<String>() + chars.as_str()
+    } else {
+        String::new()
+    }
+}
+
+pub fn lower_first(s: &str) -> String {
+    let mut chars = s.chars();
+    if let Some(c) = chars.next() {
+        c.to_lowercase().collect::<String>() + chars.as_str()
+    } else {
+        String::new()
+    }
+}
+
 pub fn hello(name: &str) -> String {
     log!(LogLevel::Info, "lib.rs");
     format!("Hello, {}!", name)
