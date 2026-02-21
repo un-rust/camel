@@ -100,6 +100,23 @@ pub fn lower_first(s: &str) -> String {
     }
 }
 
+/// Convert a string to PascalCase.
+pub fn pascal_case(s: &str, normalize: bool) -> String {
+    if s.is_empty() {
+        return String::new();
+    }
+    split_by_case(s, None)
+        .into_iter()
+        .map(|p| {
+            if normalize {
+                upper_first(&p.to_lowercase())
+            } else {
+                upper_first(&p)
+            }
+        })
+        .collect()
+}
+
 pub fn hello(name: &str) -> String {
     log!(LogLevel::Info, "lib.rs");
     format!("Hello, {}!", name)
@@ -126,6 +143,18 @@ mod tests {
         assert_eq!(lower_first(""), "");
         assert_eq!(lower_first("foo"), "foo");
         assert_eq!(lower_first("Foo"), "foo");
+    }
+
+    #[test]
+    fn test_pascal_case() {
+        // Same as scule: pascalCase(input, { normalize: true })
+        assert_eq!(pascal_case("", true), "");
+        assert_eq!(pascal_case("foo", true), "Foo");
+        assert_eq!(pascal_case("foo-bAr", true), "FooBAr");
+        assert_eq!(pascal_case("FooBARb", true), "FooBaRb");
+        assert_eq!(pascal_case("foo_bar-baz/qux", true), "FooBarBazQux");
+        assert_eq!(pascal_case("FOO_BAR", true), "FooBar");
+        assert_eq!(pascal_case("foo--bar-Baz", true), "FooBarBaz");
     }
 
     #[test]
