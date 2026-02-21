@@ -29,9 +29,7 @@ pub fn split_by_case(s: &str, separators: Option<&[char]>) -> Vec<String> {
     for c in s.chars() {
         let is_splitter = splitters.contains(&c);
         if is_splitter {
-            if !buff.is_empty() {
-                parts.push(std::mem::take(&mut buff));
-            }
+            parts.push(std::mem::take(&mut buff));
             previous_upper = None;
             previous_splitter = Some(true);
             continue;
@@ -54,9 +52,10 @@ pub fn split_by_case(s: &str, separators: Option<&[char]>) -> Vec<String> {
                 let char_count = buff.chars().count();
                 if char_count > 1 {
                     let last_char = buff.chars().last().unwrap();
+                    // Byte index of the start of the last character
                     let new_len = buff
                         .char_indices()
-                        .nth(char_count - 2)
+                        .nth(char_count - 1)
                         .map(|(i, _)| i)
                         .unwrap_or(0);
                     let rest = buff[..new_len].to_string();
@@ -91,8 +90,43 @@ pub fn hello(name: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn test_hello() {
         assert_eq!(hello("world"), "Hello, world!");
+    }
+
+    #[test]
+    fn test_split_by_case() {
+        // Default separators: ['-', '_', '/', '.']
+        assert_eq!(split_by_case("", None), Vec::<String>::new());
+        assert_eq!(split_by_case("foo", None), ["foo"]);
+        assert_eq!(split_by_case("fooBar", None), ["foo", "Bar"]);
+        assert_eq!(split_by_case("FooBarBaz", None), ["Foo", "Bar", "Baz"]);
+        assert_eq!(split_by_case("FooBARb", None), ["Foo", "BA", "Rb"]);
+        assert_eq!(
+            split_by_case("foo_bar-baz/qux", None),
+            ["foo", "bar", "baz", "qux"]
+        );
+        assert_eq!(
+            split_by_case("foo--bar-Baz", None),
+            ["foo", "", "bar", "Baz"]
+        );
+        assert_eq!(split_by_case("FOO_BAR", None), ["FOO", "BAR"]);
+        assert_eq!(split_by_case("foo123-bar", None), ["foo123", "bar"]);
+        assert_eq!(split_by_case("FOOBar", None), ["FOO", "Bar"]);
+        assert_eq!(split_by_case("ALink", None), ["A", "Link"]);
+
+        // Custom separators: ['\\', '.', '-']
+        assert_eq!(
+            split_by_case(r"foo\Bar.fuzz-FIZz", Some(&['\\', '.', '-'])),
+            ["foo", "Bar", "fuzz", "FI", "Zz"]
+        );
+
+        // Custom separator: only ['_']
+        assert_eq!(
+            split_by_case("new-name-value", Some(&['_'])),
+            ["new-name-value"]
+        );
     }
 }
