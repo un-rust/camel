@@ -135,6 +135,12 @@ pub fn snake_case(s: &str) -> String {
     lower_case_join(s, "_")
 }
 
+/// Convert a string to flatcase (all lowercase, no separators).
+/// Same as kebab_case but joins with "". Matches scule flatCase.
+pub fn flat_case(s: &str) -> String {
+    lower_case_join(s, "")
+}
+
 fn lower_case_join(s: &str, joiner: &str) -> String {
     split_by_case(s, None)
         .into_iter()
@@ -193,6 +199,17 @@ mod tests {
     fn test_snake_case() {
         assert_eq!(snake_case("FooBarBaz"), "foo_bar_baz");
         assert_eq!(snake_case("FOO_BAR"), "foo_bar");
+    }
+
+    #[test]
+    fn test_flat_case() {
+        assert_eq!(flat_case(""), "");
+        assert_eq!(flat_case("foo"), "foo");
+        assert_eq!(flat_case("foo-bAr"), "foobar");
+        assert_eq!(flat_case("FooBARb"), "foobarb");
+        assert_eq!(flat_case("foo_bar-baz/qux"), "foobarbazqux");
+        assert_eq!(flat_case("FOO_BAR"), "foobar");
+        assert_eq!(flat_case("foo--bar-Baz"), "foobarbaz");
     }
 
     #[test]
