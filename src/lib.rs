@@ -117,6 +117,12 @@ pub fn pascal_case(s: &str, normalize: bool) -> String {
         .collect()
 }
 
+/// Convert a string to camelCase.
+/// Uses `lower_first(pascal_case(s, normalize))` to match scule behavior.
+pub fn camel_case(s: &str, normalize: bool) -> String {
+    lower_first(&pascal_case(s, normalize))
+}
+
 pub fn hello(name: &str) -> String {
     log!(LogLevel::Info, "lib.rs");
     format!("Hello, {}!", name)
@@ -146,8 +152,13 @@ mod tests {
     }
 
     #[test]
+    fn test_camel_case() {
+        assert_eq!(camel_case("FooBarBaz", true), "fooBarBaz");
+        assert_eq!(camel_case("FOO_BAR", true), "fooBar");
+    }
+
+    #[test]
     fn test_pascal_case() {
-        // Same as scule: pascalCase(input, { normalize: true })
         assert_eq!(pascal_case("", true), "");
         assert_eq!(pascal_case("foo", true), "Foo");
         assert_eq!(pascal_case("foo-bAr", true), "FooBAr");
@@ -159,7 +170,6 @@ mod tests {
 
     #[test]
     fn test_split_by_case() {
-        // Default separators: ['-', '_', '/', '.']
         assert_eq!(split_by_case("", None), Vec::<String>::new());
         assert_eq!(split_by_case("foo", None), ["foo"]);
         assert_eq!(split_by_case("fooBar", None), ["foo", "Bar"]);
