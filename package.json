@@ -1,5 +1,5 @@
 {
-	"name": "package-name",
+	"name": "camel",
 	"type": "module",
 	"scripts": {
 		"build": "cargo build",

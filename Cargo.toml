@@ -1,13 +1,13 @@
 [package]
-name = "package-name"
-version = "3.0.2"
+name = "camel"
+version = "1.0.0"
 authors = [ "YONGQI <betterhyq@qq.com>" ]
 edition = "2024"
 description = "A template for a new Rust project"
-documentation = "https://docs.rs/package-name"
+documentation = "https://docs.rs/camel"
 readme = "README.md"
-homepage = "https://github.com/un-rust/package-name"
-repository = "https://github.com/un-rust/package-name"
+homepage = "https://github.com/un-rust/camel"
+repository = "https://github.com/un-rust/camel"
 license = "Apache-2.0"
 keywords = [ ]
 categories = [ "development-tools" ]
