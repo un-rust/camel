@@ -126,11 +126,21 @@ pub fn camel_case(s: &str, normalize: bool) -> String {
 /// Convert a string to kebab-case.
 /// Splits by case, lowercases each part, joins with "-". Matches scule kebabCase.
 pub fn kebab_case(s: &str) -> String {
+    lower_case_join(s, "-")
+}
+
+/// Convert a string to snake_case.
+/// Same as kebab_case but joins with "_". Matches scule snakeCase.
+pub fn snake_case(s: &str) -> String {
+    lower_case_join(s, "_")
+}
+
+fn lower_case_join(s: &str, joiner: &str) -> String {
     split_by_case(s, None)
         .into_iter()
         .map(|p| p.to_lowercase())
         .collect::<Vec<_>>()
-        .join("-")
+        .join(joiner)
 }
 
 pub fn hello(name: &str) -> String {
@@ -177,6 +187,12 @@ mod tests {
         assert_eq!(kebab_case("FooBAR"), "foo-bar");
         assert_eq!(kebab_case("ALink"), "a-link");
         assert_eq!(kebab_case("FOO_BAR"), "foo-bar");
+    }
+
+    #[test]
+    fn test_snake_case() {
+        assert_eq!(snake_case("FooBarBaz"), "foo_bar_baz");
+        assert_eq!(snake_case("FOO_BAR"), "foo_bar");
     }
 
     #[test]
