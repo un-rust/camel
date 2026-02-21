@@ -141,6 +141,23 @@ pub fn flat_case(s: &str) -> String {
     lower_case_join(s, "")
 }
 
+/// Convert a string to Train-Case (each word capitalized, joined by "-").
+/// Matches scule trainCase. With normalize, lowercases each part before capitalizing.
+pub fn train_case(s: &str, normalize: bool) -> String {
+    split_by_case(s, None)
+        .into_iter()
+        .filter(|p| !p.is_empty())
+        .map(|p| {
+            if normalize {
+                upper_first(&p.to_lowercase())
+            } else {
+                upper_first(&p)
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("-")
+}
+
 fn lower_case_join(s: &str, joiner: &str) -> String {
     split_by_case(s, None)
         .into_iter()
@@ -210,6 +227,26 @@ mod tests {
         assert_eq!(flat_case("foo_bar-baz/qux"), "foobarbazqux");
         assert_eq!(flat_case("FOO_BAR"), "foobar");
         assert_eq!(flat_case("foo--bar-Baz"), "foobarbaz");
+    }
+
+    #[test]
+    fn test_train_case() {
+        // Same as scule: trainCase(input) - without normalize
+        assert_eq!(train_case("", false), "");
+        assert_eq!(train_case("f", false), "F");
+        assert_eq!(train_case("foo", false), "Foo");
+        assert_eq!(train_case("foo-bAr", false), "Foo-B-Ar");
+        assert_eq!(train_case("AcceptCH", false), "Accept-CH");
+        assert_eq!(train_case("foo_bar-baz/qux", false), "Foo-Bar-Baz-Qux");
+        assert_eq!(train_case("FOO_BAR", false), "FOO-BAR");
+        assert_eq!(train_case("foo--bar-Baz", false), "Foo-Bar-Baz");
+        assert_eq!(train_case("WWW-authenticate", false), "WWW-Authenticate");
+        assert_eq!(train_case("WWWAuthenticate", false), "WWW-Authenticate");
+
+        // Same as scule: trainCase(input, { normalize: true })
+        assert_eq!(train_case("AcceptCH", true), "Accept-Ch");
+        assert_eq!(train_case("FOO_BAR", true), "Foo-Bar");
+        assert_eq!(train_case("WWW-authenticate", true), "Www-Authenticate");
     }
 
     #[test]
