@@ -115,6 +115,20 @@ mod tests {
     }
 
     #[test]
+    fn test_upper_first() {
+        assert_eq!(upper_first(""), "");
+        assert_eq!(upper_first("foo"), "Foo");
+        assert_eq!(upper_first("Foo"), "Foo");
+    }
+
+    #[test]
+    fn test_lower_first() {
+        assert_eq!(lower_first(""), "");
+        assert_eq!(lower_first("foo"), "foo");
+        assert_eq!(lower_first("Foo"), "foo");
+    }
+
+    #[test]
     fn test_split_by_case() {
         // Default separators: ['-', '_', '/', '.']
         assert_eq!(split_by_case("", None), Vec::<String>::new());
