@@ -166,6 +166,32 @@ fn lower_case_join(s: &str, joiner: &str) -> String {
         .join(joiner)
 }
 
+/// Words that stay lowercase in title case (a, an, and, as, at, but, by, for, if, in, is, nor, of, on, or, the, to, with)
+const TITLE_CASE_EXCEPTIONS: &[&str] = &[
+    "a", "an", "and", "as", "at", "but", "by", "for", "if", "in", "is", "nor", "of", "on", "or",
+    "the", "to", "with",
+];
+
+/// Convert a string to Title Case (like train-case but with spaces, minor words lowercase).
+/// Matches scule titleCase. With normalize, lowercases each part before capitalizing (except exceptions).
+pub fn title_case(s: &str, normalize: bool) -> String {
+    split_by_case(s, None)
+        .into_iter()
+        .filter(|p| !p.is_empty())
+        .map(|p| {
+            let lower = p.to_lowercase();
+            if TITLE_CASE_EXCEPTIONS.contains(&lower.as_str()) {
+                lower
+            } else if normalize {
+                upper_first(&lower)
+            } else {
+                upper_first(&p)
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
 pub fn hello(name: &str) -> String {
     log!(LogLevel::Info, "lib.rs");
     format!("Hello, {}!", name)
@@ -247,6 +273,16 @@ mod tests {
         assert_eq!(train_case("AcceptCH", true), "Accept-Ch");
         assert_eq!(train_case("FOO_BAR", true), "Foo-Bar");
         assert_eq!(train_case("WWW-authenticate", true), "Www-Authenticate");
+    }
+
+    #[test]
+    fn test_title_case() {
+        // Same as scule: titleCase(input) - without normalize
+        assert_eq!(title_case("", false), "");
+        assert_eq!(title_case("f", false), "F");
+        assert_eq!(title_case("foo", false), "Foo");
+        assert_eq!(title_case("foo-bar", false), "Foo Bar");
+        assert_eq!(title_case("this-IS-aTitle", false), "This is a Title");
     }
 
     #[test]
