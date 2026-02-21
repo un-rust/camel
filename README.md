@@ -10,7 +10,7 @@
 
 <!-- automdrs:description -->
 
-A template for a new Rust project
+Supports bidirectional conversion of variable strings between common naming formats.
 
 <!-- /automdrs -->
 
@@ -30,7 +30,7 @@ cargo add camel
 
 <!-- automdrs:file src="./src/main.rs" -->
 ```rust
-use package_name::hello;
+use camel::hello;
 
 fn main() {
     println!("{}", hello("un-rust"));
