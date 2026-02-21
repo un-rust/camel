@@ -123,6 +123,16 @@ pub fn camel_case(s: &str, normalize: bool) -> String {
     lower_first(&pascal_case(s, normalize))
 }
 
+/// Convert a string to kebab-case.
+/// Splits by case, lowercases each part, joins with "-". Matches scule kebabCase.
+pub fn kebab_case(s: &str) -> String {
+    split_by_case(s, None)
+        .into_iter()
+        .map(|p| p.to_lowercase())
+        .collect::<Vec<_>>()
+        .join("-")
+}
+
 pub fn hello(name: &str) -> String {
     log!(LogLevel::Info, "lib.rs");
     format!("Hello, {}!", name)
@@ -155,6 +165,18 @@ mod tests {
     fn test_camel_case() {
         assert_eq!(camel_case("FooBarBaz", true), "fooBarBaz");
         assert_eq!(camel_case("FOO_BAR", true), "fooBar");
+    }
+
+    #[test]
+    fn test_kebab_case() {
+        assert_eq!(kebab_case(""), "");
+        assert_eq!(kebab_case("foo"), "foo");
+        assert_eq!(kebab_case("foo/Bar"), "foo-bar");
+        assert_eq!(kebab_case("foo-bAr"), "foo-b-ar");
+        assert_eq!(kebab_case("foo--bar"), "foo--bar");
+        assert_eq!(kebab_case("FooBAR"), "foo-bar");
+        assert_eq!(kebab_case("ALink"), "a-link");
+        assert_eq!(kebab_case("FOO_BAR"), "foo-bar");
     }
 
     #[test]
