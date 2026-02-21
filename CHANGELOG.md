@@ -1,4 +1,28 @@
 
+## v1.0.3
+
+[compare changes](https://github.com/un-rust/camel/compare/v1.0.2...v1.0.3)
+
+### 🚀 Enhancements
+
+- Add camel_case function with unit tests for string conversion to camelCase ([2446c69](https://github.com/un-rust/camel/commit/2446c69))
+- Add kebab_case function with unit tests for string conversion to kebab-case ([950edba](https://github.com/un-rust/camel/commit/950edba))
+- Add snake_case function and refactor lower_case_join for string conversion to snake_case ([faa794b](https://github.com/un-rust/camel/commit/faa794b))
+- Add flat_case function and corresponding unit tests for string conversion to flatcase ([32b274c](https://github.com/un-rust/camel/commit/32b274c))
+- Add train_case function with unit tests for string conversion to Train-Case ([2e504b5](https://github.com/un-rust/camel/commit/2e504b5))
+- Add title_case function with unit tests for string conversion to Title Case ([0780b3e](https://github.com/un-rust/camel/commit/0780b3e))
+- Enhance string conversion utilities with detailed documentation and minor adjustments ([2b4a196](https://github.com/un-rust/camel/commit/2b4a196))
+- Update README and main.rs with comprehensive usage examples for string conversion functions ([5c6a32a](https://github.com/un-rust/camel/commit/5c6a32a))
+
+### 🏡 Chore
+
+- Update changelog for version 1.0.2 ([93c6673](https://github.com/un-rust/camel/commit/93c6673))
+- Bump version to 1.0.3 ([60b853e](https://github.com/un-rust/camel/commit/60b853e))
+
+### ❤️ Contributors
+
+- Hyq <betterhyq@qq.com>
+
 ## v1.0.2
 
 [compare changes](https://github.com/un-rust/camel/compare/v1.0.1...v1.0.2)
