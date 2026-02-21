@@ -1,7 +1,11 @@
+//! Case conversion utilities for strings (PascalCase, camelCase, kebab-case, etc.).
+
 use urlogger::{LogLevel, log};
 
+/// Default characters that split a string into words (e.g. `foo-bar`, `foo_bar`).
 const STR_SPLITTERS: &[char] = &['-', '_', '/', '.'];
 
+/// Returns whether `c` is uppercase. Returns `None` for ASCII digits.
 pub fn is_uppercase(c: char) -> Option<bool> {
     if c.is_ascii_digit() {
         return None;
@@ -10,6 +14,10 @@ pub fn is_uppercase(c: char) -> Option<bool> {
     Some(c != lower)
 }
 
+/// Splits a string into words at case boundaries and separators.
+///
+/// Handles camelCase, PascalCase, SCREAMING_SNAKE, etc. Uses `separators` (or
+/// `STR_SPLITTERS`) to split. Empty segments are preserved (e.g. `foo--bar` → `["foo","","bar"]`).
 pub fn split_by_case(s: &str, separators: Option<&[char]>) -> Vec<String> {
     let splitters: std::collections::HashSet<char> = separators
         .unwrap_or(STR_SPLITTERS)
@@ -37,7 +45,7 @@ pub fn split_by_case(s: &str, separators: Option<&[char]>) -> Vec<String> {
 
         let is_upper = is_uppercase(c);
         if previous_splitter == Some(false) {
-            // Case rising edge: 小写 -> 大写 (e.g. camel|Case)
+            // Case rising edge: lower -> upper (e.g. camel|Case)
             if previous_upper == Some(false) && is_upper == Some(true) {
                 if !buff.is_empty() {
                     parts.push(std::mem::take(&mut buff));
@@ -47,12 +55,12 @@ pub fn split_by_case(s: &str, separators: Option<&[char]>) -> Vec<String> {
                 previous_splitter = Some(false);
                 continue;
             }
-            // Case falling edge: 大写 -> 小写，且 buffer > 1 (e.g. AB|c -> A, Bc)
+            // Case falling edge: upper -> lower, buffer.len() > 1 (e.g. AB|c → A, Bc)
             if previous_upper == Some(true) && is_upper == Some(false) {
                 let char_count = buff.chars().count();
                 if char_count > 1 {
                     let last_char = buff.chars().last().unwrap();
-                    // Byte index of the start of the last character
+                    // Byte index where the last character starts
                     let new_len = buff
                         .char_indices()
                         .nth(char_count - 1)
@@ -82,6 +90,7 @@ pub fn split_by_case(s: &str, separators: Option<&[char]>) -> Vec<String> {
     parts
 }
 
+/// Capitalizes the first character; rest unchanged.
 pub fn upper_first(s: &str) -> String {
     let mut chars = s.chars();
     if let Some(c) = chars.next() {
@@ -91,6 +100,7 @@ pub fn upper_first(s: &str) -> String {
     }
 }
 
+/// Lowercases the first character; rest unchanged.
 pub fn lower_first(s: &str) -> String {
     let mut chars = s.chars();
     if let Some(c) = chars.next() {
@@ -100,7 +110,9 @@ pub fn lower_first(s: &str) -> String {
     }
 }
 
-/// Convert a string to PascalCase.
+/// Converts a string to PascalCase.
+///
+/// With `normalize == true`, each part is lowercased before capitalizing.
 pub fn pascal_case(s: &str, normalize: bool) -> String {
     if s.is_empty() {
         return String::new();
@@ -117,32 +129,31 @@ pub fn pascal_case(s: &str, normalize: bool) -> String {
         .collect()
 }
 
-/// Convert a string to camelCase.
-/// Uses `lower_first(pascal_case(s, normalize))` to match scule behavior.
+/// Converts a string to camelCase.
+///
+/// Uses `lower_first(pascal_case(s, normalize))`.
 pub fn camel_case(s: &str, normalize: bool) -> String {
     lower_first(&pascal_case(s, normalize))
 }
 
-/// Convert a string to kebab-case.
-/// Splits by case, lowercases each part, joins with "-". Matches scule kebabCase.
+/// Converts a string to kebab-case (lowercase parts joined with `-`).
 pub fn kebab_case(s: &str) -> String {
     lower_case_join(s, "-")
 }
 
-/// Convert a string to snake_case.
-/// Same as kebab_case but joins with "_". Matches scule snakeCase.
+/// Converts a string to snake_case (lowercase parts joined with `_`).
 pub fn snake_case(s: &str) -> String {
     lower_case_join(s, "_")
 }
 
-/// Convert a string to flatcase (all lowercase, no separators).
-/// Same as kebab_case but joins with "". Matches scule flatCase.
+/// Converts a string to flatcase (all lowercase, no separators).
 pub fn flat_case(s: &str) -> String {
     lower_case_join(s, "")
 }
 
-/// Convert a string to Train-Case (each word capitalized, joined by "-").
-/// Matches scule trainCase. With normalize, lowercases each part before capitalizing.
+/// Converts a string to Train-Case (each word capitalized, joined by `-`).
+///
+/// With `normalize == true`, lowercases each part before capitalizing.
 pub fn train_case(s: &str, normalize: bool) -> String {
     split_by_case(s, None)
         .into_iter()
@@ -158,6 +169,7 @@ pub fn train_case(s: &str, normalize: bool) -> String {
         .join("-")
 }
 
+/// Splits by case, lowercases each part, joins with `joiner`.
 fn lower_case_join(s: &str, joiner: &str) -> String {
     split_by_case(s, None)
         .into_iter()
@@ -166,14 +178,15 @@ fn lower_case_join(s: &str, joiner: &str) -> String {
         .join(joiner)
 }
 
-/// Words that stay lowercase in title case (a, an, and, as, at, but, by, for, if, in, is, nor, of, on, or, the, to, with)
+/// Minor words that remain lowercase in Title Case.
 const TITLE_CASE_EXCEPTIONS: &[&str] = &[
     "a", "an", "and", "as", "at", "but", "by", "for", "if", "in", "is", "nor", "of", "on", "or",
     "the", "to", "with",
 ];
 
-/// Convert a string to Title Case (like train-case but with spaces, minor words lowercase).
-/// Matches scule titleCase. With normalize, lowercases each part before capitalizing (except exceptions).
+/// Converts a string to Title Case (like train-case but with spaces, minor words lowercase).
+///
+/// With `normalize == true`, lowercases each part before capitalizing (except `TITLE_CASE_EXCEPTIONS`).
 pub fn title_case(s: &str, normalize: bool) -> String {
     split_by_case(s, None)
         .into_iter()
@@ -192,6 +205,7 @@ pub fn title_case(s: &str, normalize: bool) -> String {
         .join(" ")
 }
 
+/// Returns a greeting string. Example: `hello("world")` → `"Hello, world!"`.
 pub fn hello(name: &str) -> String {
     log!(LogLevel::Info, "lib.rs");
     format!("Hello, {}!", name)
@@ -257,7 +271,6 @@ mod tests {
 
     #[test]
     fn test_train_case() {
-        // Same as scule: trainCase(input) - without normalize
         assert_eq!(train_case("", false), "");
         assert_eq!(train_case("f", false), "F");
         assert_eq!(train_case("foo", false), "Foo");
@@ -269,7 +282,6 @@ mod tests {
         assert_eq!(train_case("WWW-authenticate", false), "WWW-Authenticate");
         assert_eq!(train_case("WWWAuthenticate", false), "WWW-Authenticate");
 
-        // Same as scule: trainCase(input, { normalize: true })
         assert_eq!(train_case("AcceptCH", true), "Accept-Ch");
         assert_eq!(train_case("FOO_BAR", true), "Foo-Bar");
         assert_eq!(train_case("WWW-authenticate", true), "Www-Authenticate");
@@ -277,7 +289,6 @@ mod tests {
 
     #[test]
     fn test_title_case() {
-        // Same as scule: titleCase(input) - without normalize
         assert_eq!(title_case("", false), "");
         assert_eq!(title_case("f", false), "F");
         assert_eq!(title_case("foo", false), "Foo");
