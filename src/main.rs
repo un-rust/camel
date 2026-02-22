@@ -4,6 +4,14 @@ use camel::{camel_case, flat_case, kebab_case, pascal_case, snake_case, title_ca
 
 fn main() {
     let s = "foo_bar-Baz";
+    // Input:     foo_bar-Baz
+    // camelCase: fooBarBaz
+    // PascalCase: FooBarBaz
+    // kebab-case: foo-bar-baz
+    // snake_case: foo_bar_baz
+    // flatcase:  foobarbaz
+    // Train-Case: Foo-Bar-Baz
+    // Title Case: Foo Bar Baz
     println!("Input:     {}", s);
     println!("camelCase: {}", camel_case(s, true));
     println!("PascalCase: {}", pascal_case(s, true));
