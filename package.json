@@ -3,16 +3,16 @@
 	"type": "module",
 	"scripts": {
 		"build": "cargo build",
-		"bump:major": "bun run scripts/bump.ts -- --major",
-		"bump:minor": "bun run scripts/bump.ts -- --minor",
-		"bump:patch": "bun run scripts/bump.ts -- --patch",
+		"bump:major": "unrust bump --bumpType major",
+		"bump:minor": "unrust bump --bumpType minor",
+		"bump:patch": "unrust bump --bumpType patch",
 		"check": "biome check . --write --unsafe",
 		"commit": "cz",
 		"format": "cargo fmt",
-		"init": "bun run scripts/init.ts",
+		"init": "unrust init",
 		"lint": "cargo clippy",
 		"prepare": "lefthook install",
-		"release": "bun run scripts/release.ts",
+		"release": "unrust release",
 		"test": "cargo test",
 		"test:coverage": "cargo tarpaulin --fail-under 95 --exclude-files 'src/main.rs'"
 	},
@@ -40,7 +40,8 @@
 		"open": "11.0.0",
 		"rslog": "2.0.0",
 		"simple-git": "3.32.1",
-		"typescript": "5.9.3"
+		"typescript": "5.9.3",
+		"unrust-toolbox": "0.0.2"
 	},
 	"packageManager": "bun@1.3.9"
 }
