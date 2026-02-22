@@ -1,4 +1,23 @@
 
+## v1.1.0
+
+[compare changes](https://github.com/un-rust/camel/compare/v1.0.3...v1.1.0)
+
+### 📖 Documentation
+
+- Add example outputs for string conversion functions in README and main.rs ([9516844](https://github.com/un-rust/camel/commit/9516844))
+- Update README title to include emoji for better visual appeal ([e6aa5b9](https://github.com/un-rust/camel/commit/e6aa5b9))
+
+### 🏡 Chore
+
+- Update changelog for version 1.0.3 ([897eca1](https://github.com/un-rust/camel/commit/897eca1))
+- **deps-dev:** Bump simple-git from 3.32.0 to 3.32.1 ([c06f172](https://github.com/un-rust/camel/commit/c06f172))
+- Bump version to 1.1.0 ([8fa39fb](https://github.com/un-rust/camel/commit/8fa39fb))
+
+### ❤️ Contributors
+
+- Hyq <betterhyq@qq.com>
+
 ## v1.0.3
 
 [compare changes](https://github.com/un-rust/camel/compare/v1.0.2...v1.0.3)
