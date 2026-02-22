@@ -1,4 +1,18 @@
 
+## v1.1.1
+
+[compare changes](https://github.com/un-rust/camel/compare/v1.1.0...v1.1.1)
+
+### 🏡 Chore
+
+- Update changelog for version 1.1.0 ([d637849](https://github.com/un-rust/camel/commit/d637849))
+- Add keywords to Cargo.toml for improved package discoverability ([ecf962d](https://github.com/un-rust/camel/commit/ecf962d))
+- Bump version to 1.1.1 ([d6e4836](https://github.com/un-rust/camel/commit/d6e4836))
+
+### ❤️ Contributors
+
+- Hyq <betterhyq@qq.com>
+
 ## v1.1.0
 
 [compare changes](https://github.com/un-rust/camel/compare/v1.0.3...v1.1.0)
