@@ -9,7 +9,7 @@ readme = "README.md"
 homepage = "https://github.com/un-rust/camel"
 repository = "https://github.com/un-rust/camel"
 license = "Apache-2.0"
-keywords = [ ]
+keywords = [ "camel", "case", "conversion", "naming", "format" ]
 categories = [ "development-tools" ]
 rust-version = "1.85.0"
 
